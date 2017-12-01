@@ -79,12 +79,12 @@ void Server::start() {
     }
 }
 
-void Server::receiveMove(int clientSocket) {
+void Server::handleMove(int fromSocket, int toSocket) {
     char moveBuff[10];
 
-    cout << "wait for receiving move" << clientSocket << endl;
+    cout << "wait for receiving move" << fromSocket << endl;
 
-    int stat = read(clientSocket, &moveBuff, sizeof(moveBuff));
+    int stat = read(fromSocket, &moveBuff, sizeof(moveBuff));
     if (stat == -1) {
         cout << "Error reading moveBuff" << endl;
         return;
@@ -93,13 +93,20 @@ void Server::receiveMove(int clientSocket) {
         cout << "Client disconnected" << endl;
         return;
     }
-
     cout << "Got move: " << moveBuff << endl;
+
+    stat = write(toSocket, moveBuff, sizeof(moveBuff));
+    if (stat == -1) {
+        cout << "Error writing moveBuff" << endl;
+        return;
+    }
+    if (stat == 0) {
+        cout << "Client disconnected" << endl;
+        return;
+    }
+    cout << "Sent Move:" << moveBuff << endl;
 }
 
-void Server::sendMove(int clientSocket) {
-
-}
 
 void Server::stop() {
     close(this->serverSocket_);

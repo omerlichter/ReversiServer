@@ -29,7 +29,7 @@ private:
      * handle move to the client
      * @param clientSocket - client socket
      */
-    void handleMove(int clientSocket) ;
+    void handleMove(int fromSocket, int toSocket) ;
 };
 
 
