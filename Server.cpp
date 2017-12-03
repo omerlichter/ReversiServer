@@ -50,16 +50,20 @@ void Server::start() {
         int firstClientSocket = accept(this->serverSocket_, (struct sockaddr *)&clientAddress,
                                   &clientAddressLen);
         cout << "first player connected" << endl;
-        if (firstClientSocket == -1)
-            throw "Error on accept";
+        if (firstClientSocket == -1) {
+            throw "Error on accept player1";
+        }
 
         cout << "Waiting for second player to connect..." << endl;
         // Accept a new client connection
         int secondClientSocket = accept(this->serverSocket_, (struct sockaddr *)&clientAddress,
                                        &clientAddressLen);
         cout << "second player connected" << endl;
-        if (secondClientSocket == -1)
-            throw "Error on accept";
+        if (secondClientSocket == -1) {
+            // Close communication with the client
+            close(firstClientSocket);
+            throw "Error on accept player2";
+        }
 
         int playerNumber = 1;
         int stat;
@@ -67,8 +71,14 @@ void Server::start() {
         playerNumber = 2;
         stat = write(secondClientSocket, &playerNumber, sizeof(playerNumber));
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 10; i++) {
+            if (i % 2 == 0) {
+                handleMove(firstClientSocket, secondClientSocket);
 
+            } else {
+                handleMove(secondClientSocket, firstClientSocket);
+
+            }
         }
 
         //handleClient(firstClientSocket);
@@ -82,7 +92,7 @@ void Server::start() {
 void Server::handleMove(int fromSocket, int toSocket) {
     char moveBuff[10];
 
-    cout << "wait for receiving move" << fromSocket << endl;
+    cout << "wait for receiving move " << fromSocket << endl;
 
     int stat = read(fromSocket, &moveBuff, sizeof(moveBuff));
     if (stat == -1) {

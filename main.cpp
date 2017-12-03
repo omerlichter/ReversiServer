@@ -10,6 +10,7 @@ int main() {
         server.start();
     } catch (const char *msg) {
         cout << "Cannot start server. Reason: " << msg << endl;
+        server.stop();
         exit(-1);
     }
 }
