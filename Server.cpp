@@ -41,7 +41,7 @@ void Server::start() {
 
     // Define the client socket's structures
     struct sockaddr_in clientAddress;
-    socklen_t clientAddressLen;
+    socklen_t clientAddressLen = sizeof((struct sockaddr *)&clientAddress);
 
     //
     while (true) {
@@ -71,25 +71,26 @@ void Server::start() {
         playerNumber = 2;
         stat = write(secondClientSocket, &playerNumber, sizeof(playerNumber));
 
-        for (int i = 0; i < 10; i++) {
-            if (i % 2 == 0) {
-                handleMove(firstClientSocket, secondClientSocket);
+        int turnCounter = 0;
+        bool end = false;
+
+        while (!end) {
+            if (turnCounter % 2 == 0) {
+                end = handleMove(firstClientSocket, secondClientSocket);
 
             } else {
-                handleMove(secondClientSocket, firstClientSocket);
+                end = handleMove(secondClientSocket, firstClientSocket);
 
             }
+            turnCounter++;
         }
 
-        //handleClient(firstClientSocket);
-
-        // Close communication with the client
         close(firstClientSocket);
         close(secondClientSocket);
     }
 }
 
-void Server::handleMove(int fromSocket, int toSocket) {
+bool Server::handleMove(int fromSocket, int toSocket) {
     char moveBuff[10];
 
     cout << "wait for receiving move " << fromSocket << endl;
@@ -97,24 +98,29 @@ void Server::handleMove(int fromSocket, int toSocket) {
     int stat = read(fromSocket, &moveBuff, sizeof(moveBuff));
     if (stat == -1) {
         cout << "Error reading moveBuff" << endl;
-        return;
+        return true;
     }
     if (stat == 0) {
         cout << "Client disconnected" << endl;
-        return;
+        return true;
+    }
+    if (strcmp(moveBuff, "END") == 0) {
+        cout << "End of game" << endl;
+        return true;
     }
     cout << "Got move: " << moveBuff << endl;
 
     stat = write(toSocket, moveBuff, sizeof(moveBuff));
     if (stat == -1) {
         cout << "Error writing moveBuff" << endl;
-        return;
+        return true;
     }
     if (stat == 0) {
         cout << "Client disconnected" << endl;
-        return;
+        return true;
     }
     cout << "Sent Move:" << moveBuff << endl;
+    return false;
 }
 
 

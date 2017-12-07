@@ -1,11 +1,19 @@
 #include <iostream>
 #include "Server.h"
 #include <stdlib.h>
+#include <fstream>
 
 using namespace std;
 
 int main() {
-     Server server(12345);
+
+    // get port from file
+    int port;
+    ifstream inFile;
+    inFile.open("setting_server.txt");
+    inFile >> port;
+
+    Server server(port);
     try {
         server.start();
     } catch (const char *msg) {

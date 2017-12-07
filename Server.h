@@ -26,10 +26,12 @@ private:
     int port_;
     int serverSocket_;
     /**
-     * handle move to the client
-     * @param clientSocket - client socket
+     * handle read and write the move
+     * @param fromSocket - read from client socket
+     * @param toSocket - write to client socket
+     * @return true if game end or player disconnect, and false if else.
      */
-    void handleMove(int fromSocket, int toSocket) ;
+    bool handleMove(int fromSocket, int toSocket) ;
 };
 
 
