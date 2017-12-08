@@ -1,7 +1,3 @@
-//
-// Created by omer on 12/1/17.
-//
-
 #ifndef REVERSISERVER_SERVER_H
 #define REVERSISERVER_SERVER_H
 

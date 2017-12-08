@@ -1,7 +1,3 @@
-//
-// Created by omer on 12/1/17.
-//
-
 #include "Server.h"
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -93,7 +89,7 @@ void Server::start() {
 bool Server::handleMove(int fromSocket, int toSocket) {
     char moveBuff[10];
 
-    cout << "wait for receiving move " << fromSocket << endl;
+    cout << "wait for receiving move from socket: " << fromSocket << endl;
 
     int stat = read(fromSocket, &moveBuff, sizeof(moveBuff));
     if (stat == -1) {
