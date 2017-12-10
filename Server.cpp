@@ -9,6 +9,7 @@
 using namespace std;
 
 #define MAX_CONNECTED_CLIENTS 2
+#define BUFFER_SIZE 10
 
 Server::Server(int port): port_(port), serverSocket_(0) {
     cout << "Server" << endl;
@@ -61,36 +62,43 @@ void Server::start() {
             throw "Error on accept player2";
         }
 
+        // send players numbers for the clients
         int playerNumber = 1;
         int stat;
         stat = write(firstClientSocket, &playerNumber, sizeof(playerNumber));
         playerNumber = 2;
         stat = write(secondClientSocket, &playerNumber, sizeof(playerNumber));
 
+        // set counters
         int turnCounter = 0;
         bool end = false;
 
+        // game loop
         while (!end) {
             if (turnCounter % 2 == 0) {
+                // handle move of the first player
                 end = handleMove(firstClientSocket, secondClientSocket);
 
             } else {
+                // handle move of the second player
                 end = handleMove(secondClientSocket, firstClientSocket);
 
             }
             turnCounter++;
         }
 
+        // close sockets
         close(firstClientSocket);
         close(secondClientSocket);
     }
 }
 
 bool Server::handleMove(int fromSocket, int toSocket) {
-    char moveBuff[10];
+    char moveBuff[BUFFER_SIZE];
 
     cout << "wait for receiving move from socket: " << fromSocket << endl;
 
+    // read from first client
     int stat = read(fromSocket, &moveBuff, sizeof(moveBuff));
     if (stat == -1) {
         cout << "Error reading moveBuff" << endl;
@@ -106,6 +114,7 @@ bool Server::handleMove(int fromSocket, int toSocket) {
     }
     cout << "Got move: " << moveBuff << endl;
 
+    // write to the second client
     stat = write(toSocket, moveBuff, sizeof(moveBuff));
     if (stat == -1) {
         cout << "Error writing moveBuff" << endl;

@@ -13,8 +13,10 @@ int main() {
     inFile.open("setting_server.txt");
     inFile >> port;
 
+    // set server
     Server server(port);
     try {
+        // start the server
         server.start();
     } catch (const char *msg) {
         cout << "Cannot start server. Reason: " << msg << endl;
