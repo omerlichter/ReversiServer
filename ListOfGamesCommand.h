@@ -9,8 +9,8 @@
 #include "Command.h"
 
 class ListOfGamesCommand: public Command {
-    virtual void ListOfGamesCommand::execute(vector<string> args);
-    virtual ListOfGamesCommand::~Command();
+    virtual void execute(vector<string> args);
+    virtual ~ListOfGamesCommand();
 };
 
 

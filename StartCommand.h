@@ -9,8 +9,8 @@
 #include "Command.h"
 
 class StartCommand: public Command {
-    virtual void StartCommand::execute(vector<string> args);
-    virtual StartCommand::~Command();
+    virtual void execute(vector<string> args);
+    virtual ~StartCommand();
 };
 
 

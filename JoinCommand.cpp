@@ -4,7 +4,7 @@
 
 #include "JoinCommand.h"
 
-JoinCommand::~Command() {
+JoinCommand::~JoinCommand() {
 
 }
 

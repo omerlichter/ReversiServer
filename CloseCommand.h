@@ -9,8 +9,8 @@
 #include "Command.h"
 
 class CloseCommand: public Command {
-    virtual CloseCommand::~Command();
-    virtual void CloseCommand::execute(vector<string> args);
+    virtual ~CloseCommand();
+    virtual void execute(vector<string> args);
 };
 
 

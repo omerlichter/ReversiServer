@@ -8,6 +8,6 @@ void CloseCommand::execute(vector<string> args) {
 
 }
 
-CloseCommand::~Command() {
+CloseCommand::~CloseCommand() {
 
 }

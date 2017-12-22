@@ -9,6 +9,6 @@ void StartCommand::execute(vector<string> args) {
 }
 
 
-StartCommand::~Command() {
+StartCommand::~StartCommand() {
 
 }

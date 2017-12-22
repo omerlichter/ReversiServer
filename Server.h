@@ -24,7 +24,8 @@ private:
     int port_;
     int serverSocket_;
     CommandsManager commandsManager_;
-    vector<GameRoom *> gameRooms_;
+    vector<GameRoom *> *gameRooms_;
+
     /**
      * handle read and write the move
      * @param fromSocket - read from client socket
@@ -32,7 +33,11 @@ private:
      * @return true if game end or player disconnect, and false if else.
      */
     bool handleMove(int fromSocket, int toSocket) ;
+
+    friend void *handleClient(void *clientSocket) ;
 };
+
+void *handleClient(void *clientSocket) ;
 
 
 #endif //REVERSISERVER_SERVER_H

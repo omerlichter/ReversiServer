@@ -7,6 +7,6 @@ void ListOfGamesCommand::execute(vector<string> args) {
 
 }
 
-ListOfGamesCommand::~Command() {
+ListOfGamesCommand::~ListOfGamesCommand() {
 
 }

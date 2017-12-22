@@ -4,7 +4,7 @@
 
 #include "PlayCommand.h"
 
-PlayCommand::~Command() {
+PlayCommand::~PlayCommand() {
 
 }
 

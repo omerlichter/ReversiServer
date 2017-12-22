@@ -9,8 +9,8 @@
 #include "Command.h"
 
 class JoinCommand: public Command {
-    virtual void JoinCommand::execute(vector<string> args);
-    virtual JoinCommand::~Command();
+    virtual void execute(vector<string> args);
+    virtual ~JoinCommand();
 };
 
 

@@ -4,12 +4,11 @@
 #include <unistd.h>
 #include <string.h>
 #include <iostream>
-#include <stdio.h>
 
 using namespace std;
 
 #define MAX_CONNECTED_CLIENTS 2
-#define BUFFER_SIZE 10
+#define BUFFER_SIZE 255
 
 Server::Server(int port): port_(port), serverSocket_(0) {
     this->commandsManager_ = CommandsManager();
@@ -38,12 +37,24 @@ void Server::start() {
     listen(this->serverSocket_, MAX_CONNECTED_CLIENTS);
 
     // Define the client socket's structures
-    struct sockaddr_in firstClientAddress;
-    socklen_t firstClientAddressLen = sizeof((struct sockaddr *)&firstClientAddress);
-    struct sockaddr_in secondClientAddress;
-    socklen_t secondClientAddressLen = sizeof((struct sockaddr *)&secondClientAddress);
+    struct sockaddr_in clientAddress;
+    socklen_t clientAddressLen = sizeof((struct sockaddr *)&clientAddress);
 
-    //
+    pthread_t thread;
+    while (true) {
+        cout << "Waiting for client connections..." << endl;
+        // Accept a new client connection
+        long clientSocket = accept(this->serverSocket_,
+                                  (struct sockaddr *)&clientAddress, &clientAddressLen);
+        cout << "Client connected" << endl;
+        if (clientSocket == -1)
+            throw "Error on accept";
+        pthread_create(&thread, NULL, handleClient, (void *)clientSocket);
+        // Close communication with the client
+        //close(clientSocket);
+    }
+
+    /*
     while (true) {
         cout << "Waiting for first player to connect..." << endl;
         // Accept a new client connection
@@ -93,7 +104,27 @@ void Server::start() {
         // close sockets
         close(firstClientSocket);
         close(secondClientSocket);
+    }*/
+}
+
+void *handleClient(void *clientSocket) {
+    char buffer[BUFFER_SIZE];
+    long socket = (long)clientSocket;
+    cout << "handle client in thread" << endl;
+
+    int stat = read(socket, buffer, sizeof(buffer));
+    if (stat == -1) {
+        cout << "Error reading buffer" << endl;
+        pthread_exit(NULL);
     }
+    if (stat == 0) {
+        cout << "Client disconnected" << endl;
+        pthread_exit(NULL);
+    }
+    cout << buffer << endl;
+
+
+
 }
 
 bool Server::handleMove(int fromSocket, int toSocket) {
@@ -102,7 +133,7 @@ bool Server::handleMove(int fromSocket, int toSocket) {
     cout << "wait for receiving move from socket: " << fromSocket << endl;
 
     // read from first client
-    int stat = read(fromSocket, &moveBuff, sizeof(moveBuff));
+    int stat = read(fromSocket, moveBuff, sizeof(moveBuff));
     if (stat == -1) {
         cout << "Error reading moveBuff" << endl;
         return true;
