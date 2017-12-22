@@ -1,0 +1,47 @@
+commit da300a38c2f17043ed2253b6b78007ef7f6726b4
+Author: Omer Lichter <omerlichter@gmail.com>
+Date:   Sat Dec 9 22:30:28 2017 -0800
+
+    write comments
+
+commit c806ba93fadde75855f94f6797b461a65f4c7a36
+Author: Omer Lichter <omerlichter@gmail.com>
+Date:   Thu Dec 7 23:26:41 2017 -0800
+
+    change server output format
+
+commit 4f800702afadd34a6bf1d54b3498786e5f0a4b8a
+Author: Omer Lichter <omerlichter@gmail.com>
+Date:   Thu Dec 7 04:16:27 2017 -0800
+
+    added server setting file
+
+commit 162d233de1ddc8665050ac7a50aa47f6dcecd4c6
+Author: Omer Lichter <omerlichter@gmail.com>
+Date:   Sat Dec 2 22:42:59 2017 -0800
+
+    changed server flow
+
+commit 1de50947c6e9864b0b92dc9570f983307c54b93f
+Author: Dvir Plaksin <dvirpla@gmail.com>
+Date:   Fri Dec 1 13:59:42 2017 +0200
+
+    Server Changes
+
+commit 478eec87d29401047703e9b8891c3b1d1034801d
+Author: Omer Lichter <omerlichter@gmail.com>
+Date:   Fri Dec 1 03:45:22 2017 -0800
+
+    added gitignore
+
+commit fd8d50fd9ac997414c724553c7c4e9e135813852
+Author: Omer Lichter <33748198+omerlichter@users.noreply.github.com>
+Date:   Fri Dec 1 03:42:15 2017 -0800
+
+    Add files via upload
+
+commit b7964126f2def111bf3131178ce8add1bac0fc46
+Author: Omer Lichter <33748198+omerlichter@users.noreply.github.com>
+Date:   Fri Dec 1 13:33:18 2017 +0200
+
+    Initial commit

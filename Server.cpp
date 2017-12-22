@@ -12,6 +12,7 @@ using namespace std;
 #define BUFFER_SIZE 10
 
 Server::Server(int port): port_(port), serverSocket_(0) {
+    this->commandsManager_ = CommandsManager();
     cout << "Server" << endl;
 }
 
@@ -37,15 +38,17 @@ void Server::start() {
     listen(this->serverSocket_, MAX_CONNECTED_CLIENTS);
 
     // Define the client socket's structures
-    struct sockaddr_in clientAddress;
-    socklen_t clientAddressLen = sizeof((struct sockaddr *)&clientAddress);
+    struct sockaddr_in firstClientAddress;
+    socklen_t firstClientAddressLen = sizeof((struct sockaddr *)&firstClientAddress);
+    struct sockaddr_in secondClientAddress;
+    socklen_t secondClientAddressLen = sizeof((struct sockaddr *)&secondClientAddress);
 
     //
     while (true) {
         cout << "Waiting for first player to connect..." << endl;
         // Accept a new client connection
-        int firstClientSocket = accept(this->serverSocket_, (struct sockaddr *)&clientAddress,
-                                  &clientAddressLen);
+        int firstClientSocket = accept(this->serverSocket_, (struct sockaddr *)&firstClientAddress,
+                                  &firstClientAddressLen);
         cout << "first player connected" << endl;
         if (firstClientSocket == -1) {
             throw "Error on accept player1";
@@ -53,8 +56,8 @@ void Server::start() {
 
         cout << "Waiting for second player to connect..." << endl;
         // Accept a new client connection
-        int secondClientSocket = accept(this->serverSocket_, (struct sockaddr *)&clientAddress,
-                                       &clientAddressLen);
+        int secondClientSocket = accept(this->serverSocket_, (struct sockaddr *)&secondClientAddress,
+                                       &secondClientAddressLen);
         cout << "second player connected" << endl;
         if (secondClientSocket == -1) {
             // Close communication with the client

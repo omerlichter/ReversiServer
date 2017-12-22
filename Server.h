@@ -1,6 +1,8 @@
 #ifndef REVERSISERVER_SERVER_H
 #define REVERSISERVER_SERVER_H
 
+#include "CommandsManager.h"
+#include "GameRoom.h"
 
 class Server {
 public:
@@ -21,6 +23,8 @@ public:
 private:
     int port_;
     int serverSocket_;
+    CommandsManager commandsManager_;
+    vector<GameRoom *> gameRooms_;
     /**
      * handle read and write the move
      * @param fromSocket - read from client socket
