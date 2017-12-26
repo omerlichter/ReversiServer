@@ -1,8 +1,8 @@
 #ifndef REVERSISERVER_SERVER_H
 #define REVERSISERVER_SERVER_H
 
-#include "CommandsManager.h"
 #include "GameRoom.h"
+#include <vector>
 
 class Server {
 public:
@@ -23,7 +23,6 @@ public:
 private:
     int port_;
     int serverSocket_;
-    CommandsManager commandsManager_;
     vector<GameRoom *> *gameRooms_;
 
     /**
@@ -34,10 +33,20 @@ private:
      */
     bool handleMove(int fromSocket, int toSocket) ;
 
+    void writeToClient(int clientSocket, const char *buff);
+
+    void readFromClient(int clientSocket, char *buff);
+
     friend void *handleClient(void *clientSocket) ;
 };
 
-void *handleClient(void *clientSocket) ;
+typedef struct struct1 {
+    int clientSocket;
+    Server * server;
+} HCStruct;
+
+
+void *handleClient(void *HCStruct) ;
 
 
 #endif //REVERSISERVER_SERVER_H

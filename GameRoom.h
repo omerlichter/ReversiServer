@@ -14,16 +14,19 @@ public:
     GameRoom(string name, int firstPlayerSocket) ;
     void joinGame(int secondPlayerSocket) ;
 
-    const string &getName_() const;
+    const string &getName() const;
 
-    int getFirstPlayerSocket_() const;
+    int getFirstPlayerSocket() const;
 
-    int getSecondPlayerSocket_() const;
+    int getSecondPlayerSocket() const;
+
+    int getStatus() const;
 
 private:
     string name_;
     int firstPlayerSocket_;
     int secondPlayerSocket_;
+    int status_;
 };
 
 

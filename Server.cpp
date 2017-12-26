@@ -4,6 +4,8 @@
 #include <unistd.h>
 #include <string.h>
 #include <iostream>
+#include <sstream>
+#include "CommandsManager.h"
 
 using namespace std;
 
@@ -11,7 +13,6 @@ using namespace std;
 #define BUFFER_SIZE 255
 
 Server::Server(int port): port_(port), serverSocket_(0) {
-    this->commandsManager_ = CommandsManager();
     cout << "Server" << endl;
 }
 
@@ -40,6 +41,7 @@ void Server::start() {
     struct sockaddr_in clientAddress;
     socklen_t clientAddressLen = sizeof((struct sockaddr *)&clientAddress);
 
+    vector<pthread_t> threads;
     pthread_t thread;
     while (true) {
         cout << "Waiting for client connections..." << endl;
@@ -49,7 +51,10 @@ void Server::start() {
         cout << "Client connected" << endl;
         if (clientSocket == -1)
             throw "Error on accept";
-        pthread_create(&thread, NULL, handleClient, (void *)clientSocket);
+        HCStruct hcStruct;
+        hcStruct.clientSocket = clientSocket;
+        hcStruct.server = this;
+        pthread_create(&thread, NULL, handleClient, (void *)&hcStruct);
         // Close communication with the client
         //close(clientSocket);
     }
@@ -107,12 +112,34 @@ void Server::start() {
     }*/
 }
 
-void *handleClient(void *clientSocket) {
+void Server::writeToClient(int clientSocket, const char *buff) {
+    int stat = write(clientSocket, buff, sizeof(buff));
+    if (stat == -1) {
+        cout << "Error reading buffer" << endl;
+    }
+    if (stat == 0) {
+        cout << "Client disconnected" << endl;
+    }
+}
+
+void Server::readFromClient(int clientSocket, char *buff) {
+    int stat = read(clientSocket, buff, sizeof(buff));
+    if (stat == -1) {
+        cout << "Error reading buffer" << endl;
+    }
+    if (stat == 0) {
+        cout << "Client disconnected" << endl;
+    }
+}
+
+void *handleClient(void *hcStruct) {
     char buffer[BUFFER_SIZE];
-    long socket = (long)clientSocket;
+    HCStruct *hcStruct1 = (HCStruct*)hcStruct;
+    Server *server = hcStruct1->server;
+    int clientSocket = hcStruct1->clientSocket;
     cout << "handle client in thread" << endl;
 
-    int stat = read(socket, buffer, sizeof(buffer));
+    int stat = read(clientSocket, buffer, sizeof(buffer));
     if (stat == -1) {
         cout << "Error reading buffer" << endl;
         pthread_exit(NULL);
@@ -121,10 +148,27 @@ void *handleClient(void *clientSocket) {
         cout << "Client disconnected" << endl;
         pthread_exit(NULL);
     }
-    cout << buffer << endl;
+    // split the string to command and args
+    string buffString(buffer);
+    int pos = buffString.find(",");
+    string commandString = buffString.substr(0, pos);
+    string argsString = buffString.substr(pos + 1);
+    cout << commandString << endl;
+    cout << argsString << endl;
+
+    // cast the client socket to int
+    stringstream stringstream1;
+    stringstream1 << clientSocket;
+    string clientSocketString = stringstream1.str();
 
 
 
+    // send to the command
+    vector<string> args;
+    args.push_back(clientSocketString);
+    args.push_back(argsString);
+    CommandsManager commandsManager(server);
+    commandsManager.executeCommand(commandString, args);
 }
 
 bool Server::handleMove(int fromSocket, int toSocket) {
