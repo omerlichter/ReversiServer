@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Server.h"
+#include "GameRoomsController.h"
 #include <stdlib.h>
 #include <fstream>
 
@@ -13,6 +14,8 @@ int main() {
     inFile.open("setting_server.txt");
     inFile >> port;
 
+    // create game room controller singleton
+    GameRoomsController *gameRoomsController = GameRoomsController::getInstance();
     // set server
     Server server(port);
     try {

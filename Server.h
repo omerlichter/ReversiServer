@@ -20,10 +20,15 @@ public:
      */
     void stop() ;
 
+    void writeToClient(int clientSocket, const string &message);
+
+    string readFromClient(int clientSocket);
+
+    void closeClient(int clientSocket);
+
 private:
     int port_;
     int serverSocket_;
-    vector<GameRoom *> *gameRooms_;
 
     /**
      * handle read and write the move
@@ -32,10 +37,6 @@ private:
      * @return true if game end or player disconnect, and false if else.
      */
     bool handleMove(int fromSocket, int toSocket) ;
-
-    void writeToClient(int clientSocket, const char *buff);
-
-    void readFromClient(int clientSocket, char *buff);
 
     friend void *handleClient(void *clientSocket) ;
 };

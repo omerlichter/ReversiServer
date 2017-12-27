@@ -4,18 +4,14 @@
 
 #include "GameRoom.h"
 
-GameRoom::GameRoom(string name, int firstPlayerSocket) {
-    this->name_ = name;
+GameRoom::GameRoom(int firstPlayerSocket) {
     this->firstPlayerSocket_ = firstPlayerSocket;
     this->status_ = 0;
 }
 
 void GameRoom::joinGame(int secondPlayerSocket) {
     this->secondPlayerSocket_ = secondPlayerSocket;
-}
-
-const string &GameRoom::getName() const {
-    return this->name_;
+    this->status_ = 1;
 }
 
 int GameRoom::getFirstPlayerSocket() const {

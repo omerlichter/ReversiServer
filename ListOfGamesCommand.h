@@ -6,11 +6,18 @@
 #define REVERSISERVER_LISTOFGAMESCOMMAND_H
 
 
+#include <sstream>
+#include "Server.h"
 #include "Command.h"
 
 class ListOfGamesCommand: public Command {
+public:
+    ListOfGamesCommand(Server *server);
     virtual void execute(vector<string> args);
     virtual ~ListOfGamesCommand();
+
+private:
+    Server *server_;
 };
 
 

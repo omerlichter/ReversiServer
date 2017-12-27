@@ -7,6 +7,7 @@
 
 #include "GameRoom.h"
 #include <map>
+#include <vector>
 #include <iostream>
 
 using namespace std;
@@ -15,14 +16,18 @@ class GameRoomsController {
 public:
     static GameRoomsController *getInstance();
 
-    void addToGameRoomsMap(GameRoom gameRoom);
+    int addToGameRoomsMap(string gameRoomName, GameRoom *gameRoom);
 
-    GameRoom &getFromGameRoomsMap(string &gameRoomName);
+    GameRoom *getFromGameRoomsMap(string gameRoomName);
+
+    vector<string> getGameRoomsNames();
+
+    ~GameRoomsController();
 
 private:
     GameRoomsController() {}
     static GameRoomsController *gameRoomsController_;
-    map<string, GameRoom> *gameRoomsMap_;
+    map<string, GameRoom*> gameRoomsMap_;
 };
 
 

@@ -3,12 +3,16 @@
 //
 
 #include "StartCommand.h"
+#include "GameRoomsController.h"
 
 StartCommand::StartCommand(Server *server) {
     this->server_ = server;
 }
 
 void StartCommand::execute(vector<string> args) {
+
+    cout << "in start command" << endl;
+
     // get client socket from the args
     string clientSocketString = args.at(0);
     istringstream clientSocketStream(clientSocketString);
@@ -18,8 +22,24 @@ void StartCommand::execute(vector<string> args) {
     // get the name of the new game
     string gameRoomName = args.at(1);
 
-    // create new game room
-    GameRoom gameRoom();
+    // create game room
+    GameRoom *gameRoom = new GameRoom(clientSocket);
+    GameRoomsController *gameRoomsController = GameRoomsController::getInstance();
+
+    int status = gameRoomsController->addToGameRoomsMap(gameRoomName, gameRoom);
+
+    if (status == 0) {
+        cout << "access to open game room with name: " << gameRoomName << endl;
+        try {
+            this->server_->writeToClient(clientSocket, "1");
+        } catch (const char *message) {
+            cout << message << endl;
+            this->server_->closeClient(clientSocket);
+        }
+    } else if (status == -1) {
+        cout << "not access to open game room with name: " << gameRoomName << endl;
+        this->server_->closeClient(clientSocket);
+    }
 }
 
 

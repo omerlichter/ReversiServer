@@ -11,10 +11,9 @@ using namespace std;
 
 class GameRoom {
 public:
-    GameRoom(string name, int firstPlayerSocket) ;
-    void joinGame(int secondPlayerSocket) ;
+    GameRoom(int firstPlayerSocket) ;
 
-    const string &getName() const;
+    void joinGame(int secondPlayerSocket) ;
 
     int getFirstPlayerSocket() const;
 
