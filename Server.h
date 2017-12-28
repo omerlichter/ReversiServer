@@ -32,6 +32,8 @@ private:
     int port_;
     int serverSocket_;
 
+    static void *accpetsLoop(void *server);
+
     static void *handleClient(void *hcStruct) ;
 };
 

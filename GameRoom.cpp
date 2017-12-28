@@ -11,6 +11,13 @@ GameRoom::GameRoom(int firstPlayerSocket, string name) {
     this->status_ = 0;
 }
 
+GameRoom::GameRoom(GameRoom &gameRoom) {
+    this->name_ = gameRoom.getName();
+    this->firstPlayerSocket_ = gameRoom.getFirstPlayerSocket();
+    this->secondPlayerSocket_ = gameRoom.getSecondPlayerSocket();
+    this->status_ = gameRoom.getStatus();
+}
+
 void GameRoom::joinGame(int secondPlayerSocket) {
     this->secondPlayerSocket_ = secondPlayerSocket;
     this->status_ = 1;
@@ -52,6 +59,7 @@ void* GameRoom::gameHandle(void *gStruct) {
         // close sockets
         server->closeClient(firstPlayerSocket);
         server->closeClient(secondPlayerSocket);
+        delete(gameRoom);
         pthread_exit(NULL);
     }
 
@@ -103,6 +111,10 @@ void* GameRoom::gameHandle(void *gStruct) {
         turnCounter++;
     }
     cout << "end game" << endl;
-    server->closeClient(firstPlayerSocket);
-    server->closeClient(secondPlayerSocket);
+    vector<string> args;
+    args.push_back(gameRoom->getName());
+    CommandsManager commandsManager(server);
+    commandsManager.executeCommand("close", args);
+    delete(gameRoom);
+    pthread_exit(NULL);
 }

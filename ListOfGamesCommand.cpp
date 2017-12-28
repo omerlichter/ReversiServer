@@ -12,7 +12,6 @@ ListOfGamesCommand::ListOfGamesCommand(Server *server) {
 }
 
 void ListOfGamesCommand::execute(vector<string> args) {
-    cout << "in list of games" << endl;
 
     // get client socket from the args
     string clientSocketString = args.at(0);
@@ -21,7 +20,7 @@ void ListOfGamesCommand::execute(vector<string> args) {
     clientSocketStream >> clientSocket;
 
     GameRoomsController *gameRoomsController = GameRoomsController::getInstance();
-    vector<string> gameRoomsNames = gameRoomsController->getGameRoomsNames();
+    vector<string> gameRoomsNames = gameRoomsController->getActiveGameRoomsNames();
 
     for (vector<string>::iterator it = gameRoomsNames.begin();
             it != gameRoomsNames.end(); it++) {

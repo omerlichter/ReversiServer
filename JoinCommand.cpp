@@ -15,8 +15,6 @@ JoinCommand::~JoinCommand() {
 
 void JoinCommand::execute(vector<string> args) {
 
-    cout << "in start command" << endl;
-
     // get client socket from the args
     string clientSocketString = args.at(0);
     istringstream clientSocketStream(clientSocketString);
@@ -27,8 +25,8 @@ void JoinCommand::execute(vector<string> args) {
     string gameRoomName = args.at(1);
 
     GameRoomsController *gameRoomsController = GameRoomsController::getInstance();
-    GameRoom *gameRoom = gameRoomsController->getFromGameRoomsMap(gameRoomName);
-    if (gameRoom == NULL || gameRoom->getStatus() == 1) {
+    int status = gameRoomsController->joinToGameRoom(gameRoomName, clientSocket);
+    if (status == -1) {
         try {
             this->server_->writeToClient(clientSocket, "-1");
         } catch (const char *message) {
@@ -45,11 +43,10 @@ void JoinCommand::execute(vector<string> args) {
             this->server_->closeClient(clientSocket);
             return;
         }
-        gameRoom->joinGame(clientSocket);
         GStruct *gStruct = new GStruct;
-        gStruct->gameRoom = gameRoom;
+        gStruct->gameRoom = gameRoomsController->getFromGameRoomsMap(gameRoomName);
         gStruct->server = this->server_;
         pthread_t thraed;
-        pthread_create(&thraed, NULL, gameRoom->gameHandle, (void *)gStruct);
+        pthread_create(&thraed, NULL, gStruct->gameRoom->gameHandle, (void *)gStruct);
     }
 }

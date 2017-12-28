@@ -38,23 +38,39 @@ void Server::start() {
     // Start listening to incoming connections
     listen(this->serverSocket_, MAX_CONNECTED_CLIENTS);
 
+    pthread_t acceptLoopThread;
+    pthread_create(&acceptLoopThread, NULL, this->accpetsLoop, (void *)this);
+
+    string command;
+    do {
+        cin >> command;
+    } while (command != "exit");
+}
+
+void* Server::accpetsLoop(void *server) {
+
+    cout << "start the accept loop thraed" << endl;
+
+    vector<pthread_t> threads;
+    pthread_t thread;
+
+    Server *serverP = (Server*) server;
+
     // Define the client socket's structures
     struct sockaddr_in clientAddress;
     socklen_t clientAddressLen = sizeof((struct sockaddr *)&clientAddress);
 
-    vector<pthread_t> threads;
-    pthread_t thread;
     while (true) {
         cout << "Waiting for client connections..." << endl;
         // Accept a new client connection
-        long clientSocket = accept(this->serverSocket_,
-                                  (struct sockaddr *)&clientAddress, &clientAddressLen);
+        long clientSocket = accept(serverP->serverSocket_,
+                                   (struct sockaddr *)&clientAddress, &clientAddressLen);
         cout << "Client connected" << endl;
         if (clientSocket == -1)
             throw "Error on accept";
         HCStruct *hcStruct = new HCStruct;
         hcStruct->clientSocket = clientSocket;
-        hcStruct->server = this;
+        hcStruct->server = serverP;
         pthread_create(&thread, NULL, handleClient, (void *)hcStruct);
     }
 }

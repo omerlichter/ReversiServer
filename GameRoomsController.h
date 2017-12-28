@@ -22,7 +22,9 @@ public:
 
     GameRoom *getFromGameRoomsMap(string gameRoomName);
 
-    vector<string> getGameRoomsNames();
+    int joinToGameRoom(string gameRoomName, int playerSocket);
+
+    vector<string> getActiveGameRoomsNames();
 
     ~GameRoomsController();
 

@@ -14,6 +14,8 @@ class GameRoom {
 public:
     GameRoom(int firstPlayerSocket, string name) ;
 
+    GameRoom(GameRoom &gameRoom);
+
     void joinGame(int secondPlayerSocket) ;
 
     int getFirstPlayerSocket() const;

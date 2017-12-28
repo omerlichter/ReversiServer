@@ -10,7 +10,6 @@ CloseCommand::CloseCommand(Server *server) {
 }
 
 void CloseCommand::execute(vector<string> args) {
-    cout << "in close command" << endl;
 
     // get the name of the new game
     string gameRoomName = args.at(0);
@@ -21,6 +20,7 @@ void CloseCommand::execute(vector<string> args) {
     int secondSocket = gameRoom->getSecondPlayerSocket();
     this->server_->closeClient(firstSocket);
     this->server_->closeClient(secondSocket);
+    delete(gameRoom);
     gameRoomsController->deleteFromGameRoomsMap(gameRoomName);
 }
 

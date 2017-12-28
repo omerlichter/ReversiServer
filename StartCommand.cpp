@@ -11,8 +11,6 @@ StartCommand::StartCommand(Server *server) {
 
 void StartCommand::execute(vector<string> args) {
 
-    cout << "in start command" << endl;
-
     // get client socket from the args
     string clientSocketString = args.at(0);
     istringstream clientSocketStream(clientSocketString);

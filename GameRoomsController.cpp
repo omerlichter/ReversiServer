@@ -38,7 +38,11 @@ int GameRoomsController::addToGameRoomsMap(string gameRoomName, GameRoom *gameRo
 int GameRoomsController::deleteFromGameRoomsMap(string gameRoomName) {
 
     pthread_mutex_lock(&game_rooms_map_mutex);
-    delete(this->getFromGameRoomsMap(gameRoomName));
+    if (this->gameRoomsMap_.count(gameRoomName) == 0) {
+        pthread_mutex_unlock(&game_rooms_map_mutex);
+        return 0;
+    }
+    GameRoom *gameRoom = this->gameRoomsMap_[gameRoomName];
     this->gameRoomsMap_.erase(gameRoomName);
     pthread_mutex_unlock(&game_rooms_map_mutex);
     return 0;
@@ -48,19 +52,39 @@ GameRoom *GameRoomsController::getFromGameRoomsMap(string gameRoomName) {
     pthread_mutex_lock(&game_rooms_map_mutex);
     if (this->gameRoomsMap_.count(gameRoomName) == 0) {
         pthread_mutex_unlock(&game_rooms_map_mutex);
-        return NULL;
+        throw "not game room name";
     }
     GameRoom *gameRoom = this->gameRoomsMap_[gameRoomName];
+    GameRoom *instanceGameRoom = new GameRoom(*gameRoom);
     pthread_mutex_unlock(&game_rooms_map_mutex);
-    return gameRoom;
+    return instanceGameRoom;
 }
 
-vector<string> GameRoomsController::getGameRoomsNames() {
+int GameRoomsController::joinToGameRoom(string gameRoomName, int playerSocket) {
+    pthread_mutex_lock(&game_rooms_map_mutex);
+    if (this->gameRoomsMap_.count(gameRoomName) == 0) {
+        pthread_mutex_unlock(&game_rooms_map_mutex);
+        return -1;
+    }
+    GameRoom *gameRoom = this->gameRoomsMap_[gameRoomName];
+    if (gameRoom->getStatus() == 0) {
+        gameRoom->joinGame(playerSocket);
+    } else {
+        pthread_mutex_unlock(&game_rooms_map_mutex);
+        return -1;
+    }
+    pthread_mutex_unlock(&game_rooms_map_mutex);
+    return 1;
+}
+
+vector<string> GameRoomsController::getActiveGameRoomsNames() {
     vector<string> gameRoomsNames;
     pthread_mutex_lock(&game_rooms_map_mutex);
     for (map<string, GameRoom*>::iterator it = this->gameRoomsMap_.begin();
          it != this->gameRoomsMap_.end(); it++) {
-        gameRoomsNames.push_back(it->first);
+        if (it->second->getStatus() == 0) {
+            gameRoomsNames.push_back(it->first);
+        }
     }
     pthread_mutex_unlock(&game_rooms_map_mutex);
     return gameRoomsNames;
