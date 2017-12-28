@@ -18,6 +18,8 @@ public:
 
     int addToGameRoomsMap(string gameRoomName, GameRoom *gameRoom);
 
+    int deleteFromGameRoomsMap(string gameRoomName);
+
     GameRoom *getFromGameRoomsMap(string gameRoomName);
 
     vector<string> getGameRoomsNames();

@@ -23,7 +23,7 @@ void StartCommand::execute(vector<string> args) {
     string gameRoomName = args.at(1);
 
     // create game room
-    GameRoom *gameRoom = new GameRoom(clientSocket);
+    GameRoom *gameRoom = new GameRoom(clientSocket, gameRoomName);
     GameRoomsController *gameRoomsController = GameRoomsController::getInstance();
 
     int status = gameRoomsController->addToGameRoomsMap(gameRoomName, gameRoom);
@@ -35,9 +35,17 @@ void StartCommand::execute(vector<string> args) {
         } catch (const char *message) {
             cout << message << endl;
             this->server_->closeClient(clientSocket);
+            return;
         }
     } else if (status == -1) {
         cout << "not access to open game room with name: " << gameRoomName << endl;
+        try {
+            this->server_->writeToClient(clientSocket, "-1");
+        } catch (const char *message) {
+            cout << message << endl;
+            this->server_->closeClient(clientSocket);
+            return;
+        }
         this->server_->closeClient(clientSocket);
     }
 }

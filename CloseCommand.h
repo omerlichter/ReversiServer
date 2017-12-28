@@ -7,10 +7,17 @@
 
 
 #include "Command.h"
+#include "Server.h"
+#include <sstream>
 
 class CloseCommand: public Command {
+public:
+    CloseCommand(Server *server);
     virtual ~CloseCommand();
     virtual void execute(vector<string> args);
+
+private:
+    Server *server_;
 };
 
 

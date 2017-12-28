@@ -1,8 +1,10 @@
 #ifndef REVERSISERVER_SERVER_H
 #define REVERSISERVER_SERVER_H
 
-#include "GameRoom.h"
+#include <iostream>
 #include <vector>
+
+using namespace std;
 
 class Server {
 public:
@@ -30,24 +32,13 @@ private:
     int port_;
     int serverSocket_;
 
-    /**
-     * handle read and write the move
-     * @param fromSocket - read from client socket
-     * @param toSocket - write to client socket
-     * @return true if game end or player disconnect, and false if else.
-     */
-    bool handleMove(int fromSocket, int toSocket) ;
-
-    friend void *handleClient(void *clientSocket) ;
+    static void *handleClient(void *hcStruct) ;
 };
 
 typedef struct struct1 {
     int clientSocket;
     Server * server;
 } HCStruct;
-
-
-void *handleClient(void *HCStruct) ;
 
 
 #endif //REVERSISERVER_SERVER_H

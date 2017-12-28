@@ -12,7 +12,7 @@ ListOfGamesCommand::ListOfGamesCommand(Server *server) {
 }
 
 void ListOfGamesCommand::execute(vector<string> args) {
-    cout << "in start command" << endl;
+    cout << "in list of games" << endl;
 
     // get client socket from the args
     string clientSocketString = args.at(0);
@@ -30,7 +30,15 @@ void ListOfGamesCommand::execute(vector<string> args) {
         } catch (const char *message) {
             cout << message << endl;
             this->server_->closeClient(clientSocket);
+            return;
         }
+    }
+    try {
+        this->server_->writeToClient(clientSocket, "EndLoop");
+    } catch (const char *message) {
+        cout << message << endl;
+        this->server_->closeClient(clientSocket);
+        return;
     }
     this->server_->closeClient(clientSocket);
 }

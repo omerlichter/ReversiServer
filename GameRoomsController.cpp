@@ -35,8 +35,21 @@ int GameRoomsController::addToGameRoomsMap(string gameRoomName, GameRoom *gameRo
     return 0;
 }
 
+int GameRoomsController::deleteFromGameRoomsMap(string gameRoomName) {
+
+    pthread_mutex_lock(&game_rooms_map_mutex);
+    delete(this->getFromGameRoomsMap(gameRoomName));
+    this->gameRoomsMap_.erase(gameRoomName);
+    pthread_mutex_unlock(&game_rooms_map_mutex);
+    return 0;
+}
+
 GameRoom *GameRoomsController::getFromGameRoomsMap(string gameRoomName) {
     pthread_mutex_lock(&game_rooms_map_mutex);
+    if (this->gameRoomsMap_.count(gameRoomName) == 0) {
+        pthread_mutex_unlock(&game_rooms_map_mutex);
+        return NULL;
+    }
     GameRoom *gameRoom = this->gameRoomsMap_[gameRoomName];
     pthread_mutex_unlock(&game_rooms_map_mutex);
     return gameRoom;

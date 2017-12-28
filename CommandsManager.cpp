@@ -11,8 +11,8 @@
 
 CommandsManager::CommandsManager(Server *server) {
     // here we crate all the options of command
-    this->commandsMap_["close"] = new CloseCommand();
-    this->commandsMap_["join"] = new JoinCommand();
+    this->commandsMap_["close"] = new CloseCommand(server);
+    this->commandsMap_["join"] = new JoinCommand(server);
     this->commandsMap_["list_games"] = new ListOfGamesCommand(server);
     this->commandsMap_["play"] = new PlayCommand();
     this->commandsMap_["start"] = new StartCommand(server);
