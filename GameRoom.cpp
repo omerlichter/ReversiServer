@@ -39,6 +39,10 @@ int GameRoom::getStatus() const {
     return this->status_;
 }
 
+pthread_t* GameRoom::getThread() const {
+    this->thread_;
+}
+
 void* GameRoom::gameHandle(void *gStruct) {
 
     cout << "start game..." << endl;
@@ -111,10 +115,12 @@ void* GameRoom::gameHandle(void *gStruct) {
         turnCounter++;
     }
     cout << "end game" << endl;
+    gameRoom->closeGameRoom(server);
+}
+
+void GameRoom::closeGameRoom(Server *server) {
     vector<string> args;
-    args.push_back(gameRoom->getName());
+    args.push_back(this->getName());
     CommandsManager commandsManager(server);
     commandsManager.executeCommand("close", args);
-    delete(gameRoom);
-    pthread_exit(NULL);
 }

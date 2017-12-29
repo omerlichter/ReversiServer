@@ -26,13 +26,18 @@ public:
 
     string getName() const;
 
+    pthread_t *getThread() const;
+
     static void *gameHandle(void *gStruct);
+
+    void closeGameRoom(Server *server);
 
 private:
     string name_;
     int firstPlayerSocket_;
     int secondPlayerSocket_;
     int status_;
+    pthread_t *thread_;
 };
 
 typedef struct struct2 {

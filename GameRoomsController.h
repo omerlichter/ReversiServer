@@ -6,6 +6,7 @@
 #define REVERSISERVER_GAMEROOMSCONTROLLER_H
 
 #include "GameRoom.h"
+#include "CommandsManager.h"
 #include <map>
 #include <vector>
 #include <iostream>
@@ -26,7 +27,7 @@ public:
 
     vector<string> getActiveGameRoomsNames();
 
-    ~GameRoomsController();
+    void closeAllGameRooms(Server *server);
 
 private:
     GameRoomsController() {}

@@ -4,6 +4,7 @@
 
 #include "CommandsManager.h"
 #include "CloseCommand.h"
+#include "CloseServerCommand.h"
 #include "JoinCommand.h"
 #include "ListOfGamesCommand.h"
 #include "StartCommand.h"
@@ -11,6 +12,7 @@
 CommandsManager::CommandsManager(Server *server) {
     // here we crate all the options of command
     this->commandsMap_["close"] = new CloseCommand(server);
+    this->commandsMap_["close_server"] = new CloseServerCommand(server);
     this->commandsMap_["join"] = new JoinCommand(server);
     this->commandsMap_["list_games"] = new ListOfGamesCommand(server);
     this->commandsMap_["start"] = new StartCommand(server);

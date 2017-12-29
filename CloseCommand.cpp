@@ -18,6 +18,8 @@ void CloseCommand::execute(vector<string> args) {
     GameRoom *gameRoom = gameRoomsController->getFromGameRoomsMap(gameRoomName);
     int firstSocket = gameRoom->getFirstPlayerSocket();
     int secondSocket = gameRoom->getSecondPlayerSocket();
+    pthread_t *thread = gameRoom->getThread();
+    pthread_cancel(*thread);
     this->server_->closeClient(firstSocket);
     this->server_->closeClient(secondSocket);
     delete(gameRoom);

@@ -31,6 +31,7 @@ public:
 private:
     int port_;
     int serverSocket_;
+    vector<pthread_t *> threads;
 
     static void *accpetsLoop(void *server);
 

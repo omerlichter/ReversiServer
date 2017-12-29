@@ -90,9 +90,9 @@ vector<string> GameRoomsController::getActiveGameRoomsNames() {
     return gameRoomsNames;
 }
 
-GameRoomsController::~GameRoomsController() {
+void GameRoomsController::closeAllGameRooms(Server *server) {
     for (map<string, GameRoom*>::iterator it = this->gameRoomsMap_.begin();
-            it != this->gameRoomsMap_.end(); it++) {
-        delete (it->second);
+         it != this->gameRoomsMap_.end(); it++) {
+        it->second->closeGameRoom(server);
     }
 }
