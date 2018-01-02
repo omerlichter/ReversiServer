@@ -9,11 +9,23 @@
 #include <sstream>
 #include "Server.h"
 #include "Command.h"
+#include "GameRoomsController.h"
 
 class ListOfGamesCommand: public Command {
 public:
+    /**
+     * constructor
+     * @param server - server
+     */
     ListOfGamesCommand(Server *server);
+    /**
+     * execute the command
+     * @param args - list of args of the command
+     */
     virtual void execute(vector<string> args);
+    /**
+     * destructor
+     */
     virtual ~ListOfGamesCommand();
 
 private:

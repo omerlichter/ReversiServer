@@ -26,4 +26,16 @@ int main() {
         server.stop();
         exit(-1);
     }
+
+    // waiting for exit command
+    string command;
+    do {
+        cin >> command;
+    } while (command != "exit");
+
+    // close all game rooms
+    vector<string> args;
+    CommandsManager commandsManager(&server);
+    commandsManager.executeCommand("close_server", args);
+    delete(GameRoomsController::getInstance());
 }

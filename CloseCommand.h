@@ -8,12 +8,24 @@
 
 #include "Command.h"
 #include "Server.h"
+#include "GameRoomsController.h"
 #include <sstream>
 
 class CloseCommand: public Command {
 public:
+    /**
+     * constructor
+     * @param server - server
+     */
     CloseCommand(Server *server);
+    /**
+     * destructor
+     */
     virtual ~CloseCommand();
+    /**
+     * execute the command
+     * @param args - list of the args of the command
+     */
     virtual void execute(vector<string> args);
 
 private:

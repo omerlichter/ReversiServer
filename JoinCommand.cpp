@@ -3,7 +3,6 @@
 //
 
 #include "JoinCommand.h"
-#include "GameRoomsController.h"
 
 JoinCommand::JoinCommand(Server *server) {
     this->server_ = server;
@@ -43,9 +42,10 @@ void JoinCommand::execute(vector<string> args) {
             this->server_->closeClient(clientSocket);
             return;
         }
+        pthread_t thread;
         GStruct *gStruct = new GStruct;
         gStruct->gameRoom = gameRoomsController->getFromGameRoomsMap(gameRoomName);
         gStruct->server = this->server_;
-        pthread_create(gStruct->gameRoom->getThread(), NULL, gStruct->gameRoom->gameHandle, (void *)gStruct);
+        pthread_create(&thread, NULL, gStruct->gameRoom->gameHandle, (void *)gStruct);
     }
 }

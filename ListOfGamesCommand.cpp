@@ -3,7 +3,6 @@
 //
 
 #include "ListOfGamesCommand.h"
-#include "GameRoomsController.h"
 
 pthread_mutex_t list_of_game_mutex;
 

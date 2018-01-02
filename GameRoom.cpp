@@ -7,6 +7,7 @@
 
 GameRoom::GameRoom(int firstPlayerSocket, string name) {
     this->firstPlayerSocket_ = firstPlayerSocket;
+    this->secondPlayerSocket_ = -1;
     this->name_ = name;
     this->status_ = 0;
 }
@@ -39,10 +40,6 @@ int GameRoom::getStatus() const {
     return this->status_;
 }
 
-pthread_t* GameRoom::getThread() const {
-    this->thread_;
-}
-
 void* GameRoom::gameHandle(void *gStruct) {
 
     cout << "start game..." << endl;
@@ -50,6 +47,7 @@ void* GameRoom::gameHandle(void *gStruct) {
     GStruct *gStruct1 = (GStruct*)gStruct;
     GameRoom *gameRoom = gStruct1->gameRoom;
     Server *server = gStruct1->server;
+    delete(gStruct1);
 
     int firstPlayerSocket = gameRoom->getFirstPlayerSocket();
     int secondPlayerSocket = gameRoom->getSecondPlayerSocket();
@@ -116,6 +114,7 @@ void* GameRoom::gameHandle(void *gStruct) {
     }
     cout << "end game" << endl;
     gameRoom->closeGameRoom(server);
+    pthread_exit(NULL);
 }
 
 void GameRoom::closeGameRoom(Server *server) {

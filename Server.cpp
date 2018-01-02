@@ -13,8 +13,6 @@ using namespace std;
 #define MAX_CONNECTED_CLIENTS 2
 #define BUFFER_SIZE 255
 
-pthread_mutex_t threads_mutex;
-
 Server::Server(int port): port_(port), serverSocket_(0) {
     cout << "Server" << endl;
 }
@@ -41,30 +39,7 @@ void Server::start() {
     listen(this->serverSocket_, MAX_CONNECTED_CLIENTS);
 
     // create accept loop thread
-    pthread_t acceptLoopThread;
-    pthread_create(&acceptLoopThread, NULL, this->accpetsLoop, (void *)this);
-
-    // waiting for exit command
-    string command;
-    do {
-        cin >> command;
-    } while (command != "exit");
-
-    cout << "kill all threads:" << endl;
-    // close all threads
-    pthread_mutex_lock(&threads_mutex);
-    for (vector<pthread_t *>::iterator it = threads.begin();
-         it != threads.end(); it++) {
-        cout << "kill thread" << endl;
-        pthread_cancel(**it);
-    }
-    pthread_mutex_unlock(&threads_mutex);
-
-    // close all game rooms
-    vector<string> args;
-    args.push_back("");
-    CommandsManager commandsManager(this);
-    commandsManager.executeCommand("close_server", args);
+    pthread_create(&this->acceptThread_, NULL, this->accpetsLoop, (void *)this);
 }
 
 void* Server::accpetsLoop(void *server) {
@@ -88,11 +63,8 @@ void* Server::accpetsLoop(void *server) {
         HCStruct *hcStruct = new HCStruct;
         hcStruct->clientSocket = clientSocket;
         hcStruct->server = serverP;
-        pthread_t *thread = new pthread_t;
-        pthread_mutex_lock(&threads_mutex);
-        serverP->threads.push_back(thread);
-        pthread_mutex_unlock(&threads_mutex);
-        pthread_create(thread, NULL, handleClient, (void *)hcStruct);
+        pthread_t thread;
+        pthread_create(&thread, NULL, handleClient, (void *)hcStruct);
     }
 }
 
@@ -170,5 +142,8 @@ void *Server::handleClient(void *hcStruct) {
 }
 
 void Server::stop() {
+
+    cout << "close the server" << endl;
+    pthread_cancel(this->acceptThread_);
     close(this->serverSocket_);
 }

@@ -12,7 +12,14 @@ using namespace std;
 
 class Command {
 public:
+    /**
+     * execute the command
+     * @param args - list of args of the command
+     */
     virtual void execute(vector<string> args) = 0 ;
+    /**
+     * destructor
+     */
     virtual ~Command() {}
 };
 

@@ -44,6 +44,7 @@ int GameRoomsController::deleteFromGameRoomsMap(string gameRoomName) {
     }
     GameRoom *gameRoom = this->gameRoomsMap_[gameRoomName];
     this->gameRoomsMap_.erase(gameRoomName);
+    delete(gameRoom);
     pthread_mutex_unlock(&game_rooms_map_mutex);
     return 0;
 }
@@ -93,6 +94,7 @@ vector<string> GameRoomsController::getActiveGameRoomsNames() {
 void GameRoomsController::closeAllGameRooms(Server *server) {
     for (map<string, GameRoom*>::iterator it = this->gameRoomsMap_.begin();
          it != this->gameRoomsMap_.end(); it++) {
+        cout << "closeGameRoom" << endl;
         it->second->closeGameRoom(server);
     }
 }

@@ -3,11 +3,6 @@
 //
 
 #include "CommandsManager.h"
-#include "CloseCommand.h"
-#include "CloseServerCommand.h"
-#include "JoinCommand.h"
-#include "ListOfGamesCommand.h"
-#include "StartCommand.h"
 
 CommandsManager::CommandsManager(Server *server) {
     // here we crate all the options of command

@@ -7,12 +7,24 @@
 
 #include <sstream>
 #include "Server.h"
+#include "GameRoomsController.h"
 #include "Command.h"
 
 class StartCommand: public Command {
 public:
+    /**
+     * constructor
+     * @param server - server
+     */
     StartCommand(Server *server);
+    /**
+     * execute the command
+     * @param args - list of args of the command
+     */
     virtual void execute(vector<string> args);
+    /**
+     * destructor
+     */
     virtual ~StartCommand();
 
 private:

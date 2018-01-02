@@ -3,7 +3,6 @@
 //
 
 #include "CloseCommand.h"
-#include "GameRoomsController.h"
 
 CloseCommand::CloseCommand(Server *server) {
     this->server_ = server;
@@ -18,11 +17,12 @@ void CloseCommand::execute(vector<string> args) {
     GameRoom *gameRoom = gameRoomsController->getFromGameRoomsMap(gameRoomName);
     int firstSocket = gameRoom->getFirstPlayerSocket();
     int secondSocket = gameRoom->getSecondPlayerSocket();
-    pthread_t *thread = gameRoom->getThread();
-    pthread_cancel(*thread);
-    this->server_->closeClient(firstSocket);
-    this->server_->closeClient(secondSocket);
-    delete(gameRoom);
+    if (firstSocket != -1) {
+        this->server_->closeClient(firstSocket);
+    }
+    if (secondSocket != -1) {
+        this->server_->closeClient(secondSocket);
+    }
     gameRoomsController->deleteFromGameRoomsMap(gameRoomName);
 }
 
