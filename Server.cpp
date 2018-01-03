@@ -76,7 +76,6 @@ void Server::writeToClient(int clientSocket, const string &message) {
             buff[i] = messageBuff[i];
         } else {
             buff[i] = '\0';
-            break;
         }
     }
     int stat = write(clientSocket, buff, sizeof(buff));
