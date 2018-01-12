@@ -114,7 +114,6 @@ void* GameRoom::gameHandle(void *gStruct) {
     }
     cout << "end game" << endl;
     gameRoom->closeGameRoom(server);
-    pthread_exit(NULL);
 }
 
 void GameRoom::closeGameRoom(Server *server) {

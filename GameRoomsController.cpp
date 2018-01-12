@@ -95,6 +95,15 @@ void GameRoomsController::closeAllGameRooms(Server *server) {
     for (map<string, GameRoom*>::iterator it = this->gameRoomsMap_.begin();
          it != this->gameRoomsMap_.end(); it++) {
         cout << "closeGameRoom" << endl;
-        it->second->closeGameRoom(server);
+        GameRoom *gameRoom = this->gameRoomsMap_[it->first];
+        int firstSocket = gameRoom->getFirstPlayerSocket();
+        int secondSocket = gameRoom->getSecondPlayerSocket();
+        if (firstSocket != -1) {
+            server->closeClient(firstSocket);
+        }
+        if (secondSocket != -1) {
+            server->closeClient(secondSocket);
+        }
+        delete(gameRoom);
     }
 }

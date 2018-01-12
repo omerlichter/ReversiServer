@@ -46,6 +46,8 @@ void JoinCommand::execute(vector<string> args) {
         GStruct *gStruct = new GStruct;
         gStruct->gameRoom = gameRoomsController->getFromGameRoomsMap(gameRoomName);
         gStruct->server = this->server_;
-        pthread_create(&thread, NULL, gStruct->gameRoom->gameHandle, (void *)gStruct);
+
+        Task *task = new Task(gStruct->gameRoom->gameHandle, (void *)gStruct);
+        this->server_->addTask(task);
     }
 }

@@ -3,6 +3,8 @@
 
 #include <iostream>
 #include <vector>
+#include "Task.h"
+#include "Threadpool.h"
 
 using namespace std;
 
@@ -42,10 +44,17 @@ public:
      */
     void closeClient(int clientSocket);
 
+    /**
+     * add task to the threadpool
+     * @param task task
+     */
+    void addTask(Task *task);
+
 private:
     int port_;
     int serverSocket_;
     pthread_t acceptThread_;
+    ThreadPool threadPool_;
 
     /**
      * static function for run the accept loop in thraed

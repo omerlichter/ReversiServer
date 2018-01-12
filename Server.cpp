@@ -12,8 +12,9 @@ using namespace std;
 
 #define MAX_CONNECTED_CLIENTS 2
 #define BUFFER_SIZE 255
+#define THREADS_NUM 5
 
-Server::Server(int port): port_(port), serverSocket_(0) {
+Server::Server(int port): port_(port), serverSocket_(0), threadPool_(ThreadPool(THREADS_NUM)) {
     cout << "Server" << endl;
 }
 
@@ -63,9 +64,13 @@ void* Server::accpetsLoop(void *server) {
         HCStruct *hcStruct = new HCStruct;
         hcStruct->clientSocket = clientSocket;
         hcStruct->server = serverP;
-        pthread_t thread;
-        pthread_create(&thread, NULL, handleClient, (void *)hcStruct);
+        Task *task = new Task(handleClient, (void *)hcStruct);
+        serverP->threadPool_.addTask(task);
     }
+}
+
+void Server::addTask(Task *task) {
+    this->threadPool_.addTask(task);
 }
 
 void Server::writeToClient(int clientSocket, const string &message) {
@@ -136,13 +141,13 @@ void *Server::handleClient(void *hcStruct) {
     commandsManager.executeCommand(commandString, args);
 
     // exit thread
-    cout << "exit thread" << endl;
-    pthread_exit(NULL);
+    cout << "end handle client" << endl;
 }
 
 void Server::stop() {
 
     cout << "close the server" << endl;
     pthread_cancel(this->acceptThread_);
+    this->threadPool_.terminate();
     close(this->serverSocket_);
 }
